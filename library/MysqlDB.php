@@ -160,4 +160,24 @@ class MysqlDB
 
         return $this;
     }
+
+    public function adder()
+    {
+        return new SQLAdder($this);
+    }
+
+    public function modifier()
+    {
+        return new SQLModifier($this);
+    }
+
+    public function remover()
+    {
+        return new SQLRemover($this);
+    }
+
+    public function searcher()
+    {
+        return new SQLSearcher($this);
+    }
 }
