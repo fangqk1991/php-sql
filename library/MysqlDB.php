@@ -18,12 +18,12 @@ class MysqlDB
 
             if($this->_db->errno)
             {
-                throw new \Exception(sprintf('Connecting error. %s', $this->_db->errno), $this->_db->errno);
+                throw new SQLException(sprintf('Connecting error. %s', $this->_db->errno), $this->_db->errno);
             }
 
             if (!$this->_db->set_charset("utf8mb4"))
             {
-                throw new \Exception(sprintf('Error loading character set utf8: %s', $this->_db->errno), $this->_db->errno);
+                throw new SQLException(sprintf('Error loading character set utf8: %s', $this->_db->errno), $this->_db->errno);
             }
         }
 
