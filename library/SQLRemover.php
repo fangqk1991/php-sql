@@ -2,7 +2,7 @@
 
 namespace FC\SQL;
 
-class SQLRemover extends SQLBuilderBase
+class SQLRemover extends BuilderBase
 {
     public function execute()
     {

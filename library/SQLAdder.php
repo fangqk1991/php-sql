@@ -2,7 +2,7 @@
 
 namespace FC\SQL;
 
-class SQLAdder extends SQLBuilderBase
+class SQLAdder extends BuilderBase
 {
     private $insertKeys = array();
     private $insertValues = array();

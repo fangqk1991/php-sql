@@ -2,7 +2,7 @@
 
 namespace FC\SQL;
 
-class SQLModifier extends SQLBuilderBase
+class SQLModifier extends BuilderBase
 {
     private $updateColumns = array();
     private $updateValues = array();

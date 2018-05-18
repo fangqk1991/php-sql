@@ -2,7 +2,7 @@
 
 namespace FC\SQL;
 
-class SQLBuilderBase
+class BuilderBase
 {
     protected $mysqlDB;
     protected $table;

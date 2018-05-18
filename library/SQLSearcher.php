@@ -2,7 +2,7 @@
 
 namespace FC\SQL;
 
-class SQLSearcher extends SQLBuilderBase
+class SQLSearcher extends BuilderBase
 {
     private $queryColumns = array();
 
