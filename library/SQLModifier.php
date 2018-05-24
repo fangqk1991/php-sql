@@ -31,7 +31,7 @@ class SQLModifier extends BuilderBase
         }
 
         $query = sprintf('UPDATE %s SET %s WHERE %s', $this->table, implode(', ', $this->updateColumns), implode(' AND ', $this->conditions()));
-        $this->mysqlDB->query($query, $this->buildStmtParams());
+        $this->mysqlDB->query($query, $this->stmtValues());
     }
 
     protected function stmtValues()

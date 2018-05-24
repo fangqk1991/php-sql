@@ -18,42 +18,16 @@ class MysqlDB
 
             if($this->_db->errno)
             {
-                throw new SQLException(sprintf('Connecting error. %s', $this->_db->errno), $this->_db->errno);
+                throw new SQLException(sprintf('Connecting error. %s', $this->_db->errno));
             }
 
             if (!$this->_db->set_charset("utf8mb4"))
             {
-                throw new SQLException(sprintf('Error loading character set utf8: %s', $this->_db->errno), $this->_db->errno);
+                throw new SQLException(sprintf('Error loading character set utf8: %s', $this->_db->errno));
             }
         }
 
         return $this->_db;
-    }
-
-    public function checkQueryValid($query, $params)
-    {
-        $valid = false;
-
-        $param_count1 = substr_count($query, '?');
-        $param_count2 = count($params);
-
-        if($param_count1 == 0 && $param_count2 == 0)
-        {
-            $valid = true;
-        }
-        else if($param_count1 > 0 && $param_count2 == $param_count1 + 1)
-        {
-            $param_head = $params[0];
-            if(strlen($param_head) == $param_count1)
-            {
-                $valid = true;
-            }
-        }
-
-        if(!$valid)
-        {
-            throw new SQLException($params);
-        }
     }
 
     public function lastInsertID()
@@ -61,12 +35,27 @@ class MysqlDB
         return $this->db()->insert_id;
     }
 
-    public function query($query, $params)
+    public function query($query, $rawParams)
     {
+        if(substr_count($query, '?') !== count($rawParams))
+        {
+            throw new SQLException('query params count not match');
+        }
+
+        $params = array();
+
+        if(count($rawParams) > 0)
+        {
+            $types = '';
+            foreach ($rawParams as $value)
+            {
+                array_push($params, $value);
+                $types .= is_int($value) ? 'i' : 's';
+            }
+            array_unshift($params, $types);
+        }
+
         $db = $this->db();
-
-        $this->checkQueryValid($query, $params);
-
         $stmt = $db->prepare($query);
 
         if(count($params) >= 2)
@@ -108,7 +97,7 @@ class MysqlDB
         while($stmt->fetch())
         {
             $x = array();
-            foreach($row as $key => $val )
+            foreach($row as $key => $val)
             {
                 $x[$key] = $val;
             }

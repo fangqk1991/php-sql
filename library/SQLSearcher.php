@@ -58,7 +58,7 @@ class SQLSearcher extends BuilderBase
             $query = sprintf('%s LIMIT %d, %d', $query, $this->page * $this->feedsPerPage, $this->feedsPerPage);
         }
 
-        return $this->mysqlDB->query($query, $this->buildStmtParams());
+        return $this->mysqlDB->query($query, $this->stmtValues());
     }
 
     public function queryCount()
@@ -73,7 +73,7 @@ class SQLSearcher extends BuilderBase
             $query = sprintf('%s WHERE %s', $query, $this->buildConditionStr());
         }
 
-        $result = $this->mysqlDB->query($query, $this->buildStmtParams());
+        $result = $this->mysqlDB->query($query, $this->stmtValues());
         return $result[0]['count'];
     }
 }

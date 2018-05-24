@@ -67,23 +67,4 @@ class BuilderBase
     {
         return $this->conditionValues;
     }
-
-    protected function buildStmtParams()
-    {
-        $params = array();
-
-        $values = $this->stmtValues();
-        if(count($values) > 0)
-        {
-            $types = '';
-            foreach ($values as $value)
-            {
-                array_push($params, $value);
-                $types .= is_int($value) ? 'i' : 's';
-            }
-            array_unshift($params, $types);
-        }
-
-        return $params;
-    }
 }

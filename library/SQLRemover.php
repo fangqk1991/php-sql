@@ -17,6 +17,6 @@ class SQLRemover extends BuilderBase
         }
 
         $query = sprintf('DELETE FROM %s WHERE %s', $this->table, implode(' AND ', $this->conditions()));
-        $this->mysqlDB->query($query, $this->buildStmtParams());
+        $this->mysqlDB->query($query, $this->stmtValues());
     }
 }
