@@ -63,7 +63,7 @@ class MysqlDB
             $params_in = array();
             for($i = 0; $i < count($params); ++$i)
             {
-                $params_in[] = &$params[$i];
+                $params_in[$i] = &$params[$i];
             }
             @call_user_func_array(array($stmt, 'bind_param'), $params_in);
         }
