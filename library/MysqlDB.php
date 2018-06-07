@@ -58,6 +58,11 @@ class MysqlDB
         $db = $this->db();
         $stmt = $db->prepare($query);
 
+        if($stmt === FALSE)
+        {
+            throw new SQLException('Prepare query error!');
+        }
+
         if(count($params) >= 2)
         {
             $params_in = array();
