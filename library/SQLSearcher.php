@@ -6,10 +6,21 @@ class SQLSearcher extends BuilderBase
 {
     private $queryColumns = array();
 
+    private $distinct = FALSE;
     private $page = -1;
     private $feedsPerPage = 1;
 
     private $optionStr;
+
+    public function markDistinct()
+    {
+        $this->distinct = TRUE;
+    }
+
+    public function setColumns(array $columns)
+    {
+        $this->queryColumns = $columns;
+    }
 
     public function addColumn($column)
     {
@@ -40,7 +51,7 @@ class SQLSearcher extends BuilderBase
         $this->checkTableValid();
         $this->checkColumnsValid();
 
-        $query = sprintf('SELECT %s FROM %s', implode(', ', $this->queryColumns), $this->table);
+        $query = sprintf('SELECT %s %s FROM %s', $this->distinct ? 'DISTINCT' : '', implode(', ', $this->queryColumns), $this->table);
 
         $conditions = $this->conditions();
         if(count($conditions) > 0)
@@ -65,7 +76,14 @@ class SQLSearcher extends BuilderBase
     {
         $this->checkTableValid();
 
-        $query = sprintf('SELECT %s FROM %s', 'COUNT(*) AS count', $this->table);
+        if($this->distinct)
+        {
+            $query = sprintf('SELECT COUNT(DISTINCT %s) AS count FROM %s', implode(', ', $this->queryColumns), $this->table);
+        }
+        else
+        {
+            $query = sprintf('SELECT COUNT(*) AS count FROM %s', $this->table);
+        }
 
         $conditions = $this->conditions();
         if(count($conditions) > 0)
