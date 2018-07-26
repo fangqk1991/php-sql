@@ -37,24 +37,11 @@ class MysqlDB
         return $this->db()->insert_id;
     }
 
-    public function query($query, $rawParams)
+    public function query($query, $params)
     {
-        if(substr_count($query, '?') !== count($rawParams))
+        if(substr_count($query, '?') !== count($params))
         {
             throw new SQLException('query params count not match');
-        }
-
-        $params = array();
-
-        if(count($rawParams) > 0)
-        {
-            $types = '';
-            foreach ($rawParams as $value)
-            {
-                array_push($params, $value);
-                $types .= 's';
-            }
-            array_unshift($params, $types);
         }
 
         $db = $this->db();
@@ -65,14 +52,11 @@ class MysqlDB
             throw new SQLException('Prepare query error!');
         }
 
-        if(count($params) >= 2)
+        if(count($params) > 0)
         {
-            $params_in = array();
-            for($i = 0; $i < count($params); ++$i)
-            {
-                $params_in[$i] = &$params[$i];
-            }
-            @call_user_func_array(array($stmt, 'bind_param'), $params_in);
+            $tmpl = sprintf('%%\'s%ds', count($params));
+            $types = sprintf($tmpl, '');
+            $stmt->bind_param($types, ...$params);
         }
 
         $stmt->execute();
@@ -89,26 +73,26 @@ class MysqlDB
         if($meta == null)
         {
             $stmt->close();
-            return array();
+            return [];
         }
 
-        $params_out = array();
-        $row = array();
+        $paramsOut = [];
+        $theRow = [];
         while($field = $meta->fetch_field())
         {
-            $params_out[] = &$row[$field->name];
+            $paramsOut[] = &$theRow[$field->name];
         }
-        @call_user_func_array(array($stmt, 'bind_result'), $params_out);
+        $stmt->bind_result(...$paramsOut);
 
-        $results = array();
+        $results = [];
         while($stmt->fetch())
         {
-            $x = array();
-            foreach($row as $key => $val)
+            $x = [];
+            foreach($theRow as $key => $value)
             {
-                $x[$key] = $val;
+                $x[$key] = $value;
             }
-            array_push($results, $x);
+            $results[] = $x;
         }
         $stmt->close();
 
