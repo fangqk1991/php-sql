@@ -2,6 +2,8 @@
 
 namespace FC\SQL;
 
+use mysqli;
+
 class MysqlDB
 {
     private $_db = NULL;
@@ -12,9 +14,9 @@ class MysqlDB
 
     private function db()
     {
-        if(!($this->_db instanceof \mysqli))
+        if(!($this->_db instanceof mysqli))
         {
-            $this->_db = new \mysqli($this->_host, $this->_account, $this->_password, $this->_dbName);
+            $this->_db = new mysqli($this->_host, $this->_account, $this->_password, $this->_dbName);
 
             if($this->_db->errno)
             {
@@ -50,7 +52,7 @@ class MysqlDB
             foreach ($rawParams as $value)
             {
                 array_push($params, $value);
-                $types .= is_int($value) ? 'i' : 's';
+                $types .= 's';
             }
             array_unshift($params, $types);
         }
