@@ -36,12 +36,12 @@ class BuilderBase
         array_push($this->conditionValues, $value);
     }
 
-    public function addSpecialCondition($condition, $value = NULL)
+    public function addSpecialCondition($condition, ...$args)
     {
         array_push($this->conditionColumns, sprintf('(%s)', $condition));
-        if($value !== NULL)
+        if(!empty($args))
         {
-            array_push($this->conditionValues, $value);
+            array_push($this->conditionValues, ...$args);
         }
     }
 
