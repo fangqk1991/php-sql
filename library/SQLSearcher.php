@@ -46,7 +46,7 @@ class SQLSearcher extends BuilderBase
         }
     }
 
-    public function queryList()
+    public function export()
     {
         $this->checkTableValid();
         $this->checkColumnsValid();
@@ -59,6 +59,13 @@ class SQLSearcher extends BuilderBase
             $query = sprintf('%s WHERE %s', $query, $this->buildConditionStr());
         }
 
+        return [$query, $this->stmtValues()];
+    }
+
+    public function queryList()
+    {
+        list($query, $params) = $this->export();
+
         if($this->optionStr !== NULL)
         {
             $query = sprintf('%s %s', $query, $this->optionStr);
@@ -69,7 +76,7 @@ class SQLSearcher extends BuilderBase
             $query = sprintf('%s LIMIT %d, %d', $query, $this->page * $this->feedsPerPage, $this->feedsPerPage);
         }
 
-        return $this->mysqlDB->query($query, $this->stmtValues());
+        return $this->mysqlDB->query($query, $params);
     }
 
     public function queryCount()
