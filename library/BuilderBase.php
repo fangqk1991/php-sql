@@ -45,6 +45,11 @@ class BuilderBase
         }
     }
 
+    public function addStmtValues(...$args)
+    {
+        array_push($this->conditionValues, ...$args);
+    }
+
     protected function conditions()
     {
         return $this->conditionColumns;
