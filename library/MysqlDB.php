@@ -11,6 +11,7 @@ class MysqlDB
     private $_account;
     private $_password;
     private $_dbName;
+    private $_debug = FALSE;
 
     private function db()
     {
@@ -32,6 +33,11 @@ class MysqlDB
         return $this->_db;
     }
 
+    public function setDebugMode()
+    {
+        $this->_debug = TRUE;
+    }
+
     public function lastInsertID()
     {
         return $this->db()->insert_id;
@@ -49,7 +55,7 @@ class MysqlDB
 
         if($stmt === FALSE)
         {
-            throw new SQLException('Prepare query error!');
+            throw new SQLException('Prepare query error! ' . ($this->_debug ? $query : ''));
         }
 
         if(count($params) > 0)
