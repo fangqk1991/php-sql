@@ -1,17 +1,19 @@
 {
-    "name": "fang/php-sql",
-    "description": "fang's php-sql dev",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "fangqk1991",
-            "email": "me@fangqk.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "autoload": {
-        "psr-4": {"FC\\SQL\\": "library/"}
-    },
-    "require": {}
+  "name": "fang/php-sql",
+  "description": "fang's php-sql dev",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "fangqk1991",
+      "email": "me@fangqk.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {"FC\\SQL\\": "library/"}
+  },
+  "require": {
+    "ext-mysqli": "*"
+  }
 }
