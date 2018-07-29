@@ -54,7 +54,7 @@ class DBTools
 
         foreach($cols as $key)
         {
-            if(isset($params[$key]))
+            if(array_key_exists($key, $params))
             {
                 $builder->updateKV($key, $params[$key]);
             }
@@ -91,7 +91,7 @@ class DBTools
             $pKeys = is_array($pKey) ? $pKey : array($pKey);
             foreach ($pKeys as $key)
             {
-                if(!isset($params[$key]))
+                if(!array_key_exists($key, $params))
                 {
                     throw new SQLException(sprintf('%s: primary key missing.', get_class()));
                 }
