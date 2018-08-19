@@ -6,10 +6,7 @@ class SQLRemover extends BuilderBase
 {
     public function execute()
     {
-        if(empty($this->table))
-        {
-            throw new SQLException(sprintf('%s: table missing.', get_class()));
-        }
+        $this->checkTableValid();
 
         if(count($this->conditionColumns) <= 0)
         {

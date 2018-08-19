@@ -107,7 +107,7 @@ class DBTools
         return NULL;
     }
 
-    public function fetchList($params, $page, $itemsPerPage)
+    public function fetchList($params, $page, $feedsPerPage)
     {
         $handler = $this->_handler;
         $sql = $handler->sql_instance();
@@ -116,7 +116,7 @@ class DBTools
 
         $builder = new SQLSearcher($sql);
         $builder->setTable($table);
-        $builder->setPageInfo($page, $itemsPerPage);
+        $builder->setPageInfo($page, $feedsPerPage);
 
         foreach($cols as $key)
         {
