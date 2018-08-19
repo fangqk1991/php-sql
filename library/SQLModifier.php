@@ -19,7 +19,7 @@ class SQLModifier extends BuilderBase
 
         if(count($this->updateColumns) <= 0)
         {
-            throw new SQLException(sprintf('%s: updateColumns missing.', get_class()));
+            return ;
         }
 
         if(count($this->conditionColumns) <= 0)
