@@ -79,6 +79,17 @@ class SQLSearcher extends BuilderBase
         return $this->mysqlDB->query($query, $params);
     }
 
+    public function querySingle()
+    {
+        $items = $this->queryList();
+        if(count($items) > 0)
+        {
+            return $items[0];
+        }
+
+        return NULL;
+    }
+
     public function queryCount()
     {
         $this->checkTableValid();
