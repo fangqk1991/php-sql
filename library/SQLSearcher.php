@@ -4,45 +4,63 @@ namespace FC\SQL;
 
 class SQLSearcher extends BuilderBase
 {
-    private $queryColumns = array();
+    private $_queryColumns = array();
 
-    private $distinct = FALSE;
-    private $page = -1;
-    private $feedsPerPage = 1;
+    private $_distinct = FALSE;
+    private $_page = -1;
+    private $_feedsPerPage = 1;
 
-    private $optionStr;
+    private $_optionStr;
+
+    private $_orderRules = [];
 
     public function markDistinct()
     {
-        $this->distinct = TRUE;
+        $this->_distinct = TRUE;
     }
 
     public function setColumns(array $columns)
     {
-        $this->queryColumns = $columns;
+        $this->_queryColumns = $columns;
     }
 
     public function addColumn($column)
     {
-        array_push($this->queryColumns, $column);
+        array_push($this->_queryColumns, $column);
     }
 
-    public function setPageInfo($page, $feedsPerPage)
+    public function setPageInfo($page, $_feedsPerPage)
     {
-        $this->page = $page;
-        $this->feedsPerPage = $feedsPerPage;
+        $this->_page = $page;
+        $this->_feedsPerPage = $_feedsPerPage;
     }
 
-    public function setOptionStr($optionStr)
+    public function setOptionStr($_optionStr)
     {
-        $this->optionStr = $optionStr;
+        $this->_optionStr = $_optionStr;
+    }
+
+    public function addOrderRule($sortKey, $direction)
+    {
+        if(!preg_match('#^(\w+)$#', $direction))
+        {
+            return ;
+        }
+
+        $direction = strtoupper($direction);
+        if($direction !== 'DESC')
+        {
+            $direction = '';
+        }
+
+        array_push($this->_orderRules, ['sort_key' => $sortKey, 'sort_direction' => $direction]);
     }
 
     private function checkColumnsValid()
     {
-        if(count($this->queryColumns) <= 0)
+        if(count($this->_queryColumns) <= 0)
         {
-            throw new SQLException(sprintf('%s: queryColumns missing.', get_class()));
+            throw new SQLException(sprintf('%s: _queryColumns missing.', get_class()));
         }
     }
 
@@ -51,7 +69,7 @@ class SQLSearcher extends BuilderBase
         $this->checkTableValid();
         $this->checkColumnsValid();
 
-        $query = sprintf('SELECT %s %s FROM %s', $this->distinct ? 'DISTINCT' : '', implode(', ', $this->queryColumns), $this->table);
+        $query = sprintf('SELECT %s %s FROM %s', $this->_distinct ? 'DISTINCT' : '', implode(', ', $this->_queryColumns), $this->table);
 
         $conditions = $this->conditions();
         if(count($conditions) > 0)
@@ -66,14 +84,23 @@ class SQLSearcher extends BuilderBase
     {
         list($query, $params) = $this->export();
 
-        if($this->optionStr !== NULL)
+        if($this->_optionStr !== NULL)
         {
-            $query = sprintf('%s %s', $query, $this->optionStr);
+            $query = sprintf('%s %s', $query, $this->_optionStr);
         }
 
-        if($this->page >= 0 && $this->feedsPerPage > 0)
+        if(!empty($this->_orderRules))
         {
-            $query = sprintf('%s LIMIT %d, %d', $query, $this->page * $this->feedsPerPage, $this->feedsPerPage);
+            $orderItems = array_map(function($rule) {
+                return sprintf('%s %s', $rule['sort_key'], $rule['sort_direction']);
+            }, $this->_orderRules);
+
+            $query = sprintf('%s ORDER BY %s', $query, implode(', ', $orderItems));
+        }
+
+        if($this->_page >= 0 && $this->_feedsPerPage > 0)
+        {
+            $query = sprintf('%s LIMIT %d, %d', $query, $this->_page * $this->_feedsPerPage, $this->_feedsPerPage);
         }
 
         return $this->mysqlDB->query($query, $params);
@@ -94,9 +121,9 @@ class SQLSearcher extends BuilderBase
     {
         $this->checkTableValid();
 
-        if($this->distinct)
+        if($this->_distinct)
         {
-            $query = sprintf('SELECT COUNT(DISTINCT %s) AS count FROM %s', implode(', ', $this->queryColumns), $this->table);
+            $query = sprintf('SELECT COUNT(DISTINCT %s) AS count FROM %s', implode(', ', $this->_queryColumns), $this->table);
         }
         else
         {
