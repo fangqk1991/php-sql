@@ -4,7 +4,7 @@ namespace FC\SQL;
 
 use mysqli;
 
-class MysqlDB
+class FCDatabase
 {
     private $_db = NULL;
     private $_host;

@@ -3,12 +3,12 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config.local/MyConfig.php';
 
-use FC\SQL\MysqlDB;
+use FC\SQL\FCDatabase;
 
-MysqlDB::getInstance()->init(MyConfig::SQL_Host, MyConfig::SQL_Account, MyConfig::SQL_Password, MyConfig::SQL_DBName);
+FCDatabase::getInstance()->init(MyConfig::SQL_Host, MyConfig::SQL_Account, MyConfig::SQL_Password, MyConfig::SQL_DBName);
 
 //{
-//    $builder = MysqlDB::getInstance()->searcher();
+//    $builder = FCDatabase::getInstance()->searcher();
 //    $builder->setTable('manager');
 //    $builder->addColumn('*');
 //    $builder->setPageInfo(0, 3);
@@ -17,6 +17,6 @@ MysqlDB::getInstance()->init(MyConfig::SQL_Host, MyConfig::SQL_Account, MyConfig
 //}
 
 {
-    $items = MysqlDB::getInstance()->query('SELECT * FROM manager WHERE account = ?', array('fang'));
+    $items = FCDatabase::getInstance()->query('SELECT * FROM manager WHERE account = ?', array('fang'));
     var_dump($items);
 }

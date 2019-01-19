@@ -10,7 +10,7 @@ class BuilderBase
     protected $conditionColumns = array();
     protected $conditionValues = array();
 
-    public function __construct(MysqlDB $mysqlDB)
+    public function __construct(FCDatabase $mysqlDB)
     {
         $this->mysqlDB = $mysqlDB;
     }
