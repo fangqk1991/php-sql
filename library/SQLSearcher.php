@@ -29,17 +29,6 @@ class SQLSearcher extends BuilderBase
         array_push($this->_queryColumns, $column);
     }
 
-    public function setPageInfo($page, $_feedsPerPage)
-    {
-        $this->_page = $page;
-        $this->_feedsPerPage = $_feedsPerPage;
-    }
-
-    public function setOptionStr($_optionStr)
-    {
-        $this->_optionStr = $_optionStr;
-    }
-
     public function addOrderRule($sortKey, $direction)
     {
         if(!preg_match('#^(\w+)$#', $direction))
@@ -54,6 +43,17 @@ class SQLSearcher extends BuilderBase
         }
 
         array_push($this->_orderRules, ['sort_key' => $sortKey, 'sort_direction' => $direction]);
+    }
+
+    public function setPageInfo($page, $feedsPerPage)
+    {
+        $this->_page = $page;
+        $this->_feedsPerPage = $feedsPerPage;
+    }
+
+    public function setOptionStr($optionStr)
+    {
+        $this->_optionStr = $optionStr;
     }
 
     private function checkColumnsValid()
@@ -103,7 +103,7 @@ class SQLSearcher extends BuilderBase
             $query = sprintf('%s LIMIT %d, %d', $query, $this->_page * $this->_feedsPerPage, $this->_feedsPerPage);
         }
 
-        return $this->mysqlDB->query($query, $params);
+        return $this->database->query($query, $params);
     }
 
     public function querySingle()
@@ -136,7 +136,7 @@ class SQLSearcher extends BuilderBase
             $query = sprintf('%s WHERE %s', $query, $this->buildConditionStr());
         }
 
-        $result = $this->mysqlDB->query($query, $this->stmtValues());
+        $result = $this->database->query($query, $this->stmtValues());
         return $result[0]['count'];
     }
 }

@@ -23,9 +23,9 @@ class SQLAdder extends BuilderBase
         }
 
         $query = sprintf('INSERT INTO %s(%s) VALUES(%s)', $this->table, implode(', ', $this->insertKeys), $this->marksOfInsertQuery());
-        $this->mysqlDB->query($query, $this->stmtValues());
+        $this->database->query($query, $this->stmtValues());
 
-        return $this->mysqlDB->lastInsertID();
+        return $this->database->lastInsertID();
     }
 
     private function marksOfInsertQuery()

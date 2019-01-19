@@ -4,15 +4,15 @@ namespace FC\SQL;
 
 class BuilderBase
 {
-    protected $mysqlDB;
+    protected $database;
     protected $table;
 
     protected $conditionColumns = array();
     protected $conditionValues = array();
 
-    public function __construct(FCDatabase $mysqlDB)
+    public function __construct(FCDatabase $db)
     {
-        $this->mysqlDB = $mysqlDB;
+        $this->database = $db;
     }
 
     public function setTable($table)
